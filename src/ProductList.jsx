@@ -1,20 +1,29 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import './ProductList.css'
+import './ProductList.css';
 import CartItem from './CartItem';
 import { addItem } from './CartSlice';
 
 function ProductList({ onHomeClick }) {
     const dispatch = useDispatch();
     const [showCart, setShowCart] = useState(false);
-    const [addedToCart, setAddedToCart] = useState({});
     const [showPlants, setShowPlants] = useState(true);
 
-    // Get cart items count for badge
+    // Access Redux store to get cart items
     const cartItems = useSelector(state => state.cart.items);
-    const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
+    // Calculate total quantity of items in cart
+    const calculateTotalQuantity = () => {
+        return cartItems ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
+    };
+
+    const cartItemCount = calculateTotalQuantity();
+
+    // Track added items locally for button state
+    const [addedToCart, setAddedToCart] = useState({});
 
     const handleAddToCart = (plant) => {
+        // Dispatch addItem action to Redux store
         dispatch(addItem(plant));
         setAddedToCart(prevState => ({
             ...prevState,
@@ -238,20 +247,20 @@ function ProductList({ onHomeClick }) {
         justifyContent: 'space-between',
         alignItems: 'center',
         fontSize: '20px',
-    }
+    };
 
     const styleObjUl = {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         width: '1100px',
-    }
+    };
 
     const styleA = {
         color: 'white',
         fontSize: '30px',
         textDecoration: 'none',
-    }
+    };
 
     const handleHomeClick = (e) => {
         e.preventDefault();
